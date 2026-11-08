@@ -161,6 +161,7 @@ h3.m-h { color: var(--red); font-size: .86em; margin: 1.2em 0 .25em; font-weight
 .mpanel summary small { color: var(--muted); font-weight: 400; }
 .mpanel[open] summary { margin-bottom: 6px; }
 .mass .ropt { font-weight: 700; margin-top: .6em; }
+.mass .ropt .ref-t { font-weight: 400; font-size: .8em; }
 .b-search { width: 100%; font: inherit; font-size: 16px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--ink); margin: .2em 0 .6em; }
 .b-list { list-style: none; padding: 0; margin: 0; }
 .b-list li { padding: 7px 0; border-bottom: 1px solid var(--line); }
@@ -169,7 +170,8 @@ h3.m-h { color: var(--red); font-size: .86em; margin: 1.2em 0 .25em; font-weight
 .b-secs { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 3px; font-size: .82em; }
 .b-secs a { color: var(--accent); }
 .b-back { font-size: 14px; color: var(--accent); text-decoration: none; }
-.mass .b-pet { padding-left: 1.2em; text-indent: -1em; }
+.mass .b-pet { position: relative; padding-left: 1.3em; }
+.mass .b-pet::before { content: '•'; position: absolute; left: .3em; }
 
 /* ---------- 祝福禮典: cards, step bar ---------- */
 .b-group { font-size: 13px; color: var(--red); letter-spacing: .08em; margin: 1.4em 0 .5em; font-weight: 700; }

@@ -21,11 +21,17 @@ function line(b, i) {
   if (b.k === 'sub') return `<h3 class="m-h b-sub" id="${b.id}">${esc(t)}</h3>`;
   if (b.k === 'h') return `<h3 class="m-h"${STEP_BAR.includes(t) ? ` data-step="${esc(t)}" id="bs${i}"` : ''}>${esc(t)}</h3>`;
   if (b.k === 'rub') return `<p class="rub">${inl(t)}</p>`;
-  if (b.k === 'opt') return `<p class="m-p ropt">${esc(t)}</p>`;
+  if (b.k === 'opt') {
+    // Bible reference like 格前12:12-14（title）: the title in smaller type
+    const r = t.match(/^(.{0,3}[^\s（(：:]{1,5}\d+:[\d,\- :]*\d)(（[^（）]*）?)?(.*)$/s);
+    if (r && r[2]) return `<p class="m-p ropt">${esc(r[1])}<span class="ref-t">${esc(r[2])}</span>${esc(r[3])}</p>`;
+    return `<p class="m-p ropt">${esc(t)}</p>`;
+  }
   if (b.k === 'resp') return `<p class="m-p"><span class="spk">答：</span>${inl(t.replace(/^答[：:]\s*/, ''))}</p>`;
   const m = t.match(SPK);
   if (m) return `<p class="m-p"><span class="spk">${esc(t.slice(0, m[0].length - 1))}：</span>${inl(t.slice(m[0].length))}</p>`;
-  if (/^[\-－—一]\s*求/.test(t)) return `<p class="m-p b-pet">—${inl(t.replace(/^[\-－—一]\s*/, ''))}</p>`;
+  if (b.pet) return `<p class="m-p b-pet">${inl(t)}</p>`;
+  if (/^[\-－—一]\s*求/.test(t)) return `<p class="m-p b-pet">${inl(t.replace(/^[\-－—一]\s*/, ''))}</p>`;
   return `<p class="m-p">${inl(t)}</p>`;
 }
 // 「第十二章新學校或大學祝福儀式」 → { n: '十二', title: '新學校或大學祝福儀式' }
@@ -70,14 +76,7 @@ export function renderChapter(id) {
   const { p, c } = r;
   const { n, title } = splitTitle(c.title);
   const secs = c.sections.filter((s) => s.level === 1);
-  // 前言 (pastoral notes) folded into a <details>, from its heading to the next heading or section
-  const html = []; let intro = false;
-  c.blocks.forEach((b, i) => {
-    if (intro && (b.k === 'h' || b.k === 'section' || b.k === 'sub')) { html.push('</div></details>'); intro = false; }
-    if (b.k === 'h' && b.t === '前言') { html.push('<details class="b-intro"><summary>前言（牧民指引）</summary><div>'); intro = true; return; }
-    html.push(line(b, i));
-  });
-  if (intro) html.push('</div></details>');
+  const html = c.blocks.map((b, i) => line(b, i));
   const steps = [...new Set(c.blocks.filter((b) => b.k === 'h' && STEP_BAR.includes(b.t)).map((b) => b.t))];
   const all = chapters(), k = all.findIndex((x) => x.c.id === id);
   const nav = (x, lab) => (x ? `<a href="#" class="pill" data-chap="${x.c.id}">${lab}${esc(splitTitle(x.c.title).title)}</a>` : '');
