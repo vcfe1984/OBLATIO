@@ -151,7 +151,6 @@ h3.m-h { color: var(--red); font-size: .86em; margin: 1.2em 0 .25em; font-weight
 .mass .m-cons { margin: .5em 0 .7em; font-weight: 700; font-size: calc(1em + 2px); line-height: 1.7; }
 .mass .spk { color: var(--red); font-weight: 700; }
 .mass .ri { color: var(--red); font-size: .85em; }
-.mass .sup { border-left: 3px solid #2a6db0; padding-left: 8px; }
 .mass .tabs { margin: .8em 0 .2em; font-size: 14px; }
 .norubrics .mass .ri { display: none; }
 @media print {

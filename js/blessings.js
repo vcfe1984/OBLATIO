@@ -58,7 +58,7 @@ export function renderIndex(q = '') {
     out.push('</div>');
   }
   if (!any) out.push('<p class="empty">找不到相符的祝福。</p>');
-  out.push(`<div class="notes b-src"><p>中國主教團禮儀委員會編譯《祝福禮典》（1984年拉丁文版）。只保留書中印出全文的讀經；其他僅列出章節的讀經選項已刪去。用語已按香港教區習慣（亞孟等）。</p></div>`);
+  out.push(`<div class="notes b-src"><p>中國主教團禮儀委員會編譯《祝福禮典》（1984年拉丁文版）。只保留書中印出全文的讀經；其他僅列出章節的讀經選項已刪去。用語已按香港教區習慣（阿們等）。</p></div>`);
   return out.join('');
 }
 export function findChapter(id) {

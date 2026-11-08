@@ -5,7 +5,7 @@ import { loadBlessings, renderIndex as blessIndex, renderChapter as blessChapter
 import { initTTS, stop as stopTTS } from './tts.js';
 import { loadMissal, missalLoaded, massesFor, defaults as massDefaults, renderMass as massHtml, optionsPanel } from './missal.js';
 
-const APP_VERSION = 'v4';   // keep in step with VERSION in sw.js
+const APP_VERSION = 'v5';   // keep in step with VERSION in sw.js
 const $ = (s) => document.querySelector(s);
 const store = { get(k, d) { try { const v = localStorage.getItem('oblatio.' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem('oblatio.' + k, JSON.stringify(v)); } catch {} } };
@@ -130,10 +130,9 @@ async function renderBook(book, info) {
   });
   finish(el); zh($('#celebs'));
 }
-// 港澳用「亞孟」，其他日曆用「阿們」; 台灣用「週」
+// 台灣用「週」
 function finish(el) {
   const cal = currentCalendar();
-  if (cal !== 'hk' && cal !== 'mo') retext(el, /亞孟/g, '阿們');
   if (cal === 'tw') retext($('#celebs'), /周/g, '週');
   zh(el);
 }
