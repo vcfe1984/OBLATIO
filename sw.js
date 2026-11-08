@@ -1,5 +1,5 @@
 // Service worker：全部經文離線可用。更新時請改 VERSION（並同時改 js/app.js 的 APP_VERSION）。
-const VERSION = 'oblatio-v12';
+const VERSION = 'oblatio-v13';
 const FONTS = 'fonts-v1';   // change only when the font files change
 const SHELL = ['./', 'index.html', 'css/app.css', 'css/fonts.css', 'js/app.js', 'js/calendar.js', 'js/liturgy.js', 'js/missal.js', 'js/blessings.js', 'js/tts.js', 'manifest.webmanifest',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png', 'icons/icon-maskable-512.png',

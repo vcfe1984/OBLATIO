@@ -5,7 +5,7 @@ import { loadBlessings, renderIndex as blessIndex, renderChapter as blessChapter
 import { initTTS, stop as stopTTS } from './tts.js';
 import { loadMissal, missalLoaded, massesFor, defaults as massDefaults, renderMass as massHtml, optionsPanel } from './missal.js';
 
-const APP_VERSION = 'v12';   // keep in step with VERSION in sw.js
+const APP_VERSION = 'v13';   // keep in step with VERSION in sw.js
 const $ = (s) => document.querySelector(s);
 const store = { get(k, d) { try { const v = localStorage.getItem('oblatio.' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem('oblatio.' + k, JSON.stringify(v)); } catch {} } };
