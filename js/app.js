@@ -2,9 +2,10 @@
 import { loadCalendar, dayInfo, setCalendar, calendarList, currentCalendar } from './liturgy.js';
 import { fromIso, iso, WD } from './calendar.js';
 import { loadBlessings, renderIndex as blessIndex, renderChapter as blessChapter, goStep } from './blessings.js';
+import { initTTS, stop as stopTTS } from './tts.js';
 import { loadMissal, missalLoaded, massesFor, defaults as massDefaults, renderMass as massHtml, optionsPanel } from './missal.js';
 
-const APP_VERSION = 'v2';   // keep in step with VERSION in sw.js
+const APP_VERSION = 'v3';   // keep in step with VERSION in sw.js
 const $ = (s) => document.querySelector(s);
 const store = { get(k, d) { try { const v = localStorage.getItem('oblatio.' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem('oblatio.' + k, JSON.stringify(v)); } catch {} } };
@@ -59,6 +60,7 @@ function renderCelebs(info) {
 }
 
 function render() {
+  stopTTS();   // new text on screen: stop reading
   const info = dayInfo(S.date);
   if (!info.choices.some((c) => c.id === (S.choice[S.date] || ''))) S.choice[S.date] = '';
   const [y, m, d] = S.date.split('-').map(Number);
@@ -196,6 +198,7 @@ async function main() {
   zh();
   $('#coverage').textContent = `版本 ${APP_VERSION}`;
   render();
+  initTTS(store);
   if (navigator.serviceWorker && navigator.serviceWorker.register && location.protocol !== 'file:') try {
     navigator.serviceWorker.register('sw.js').then((reg) => {
       reg.addEventListener('updatefound', () => { const w = reg.installing; w && w.addEventListener('statechange', () => {
