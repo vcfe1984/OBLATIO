@@ -25,7 +25,7 @@ function line(b, i) {
   if (b.k === 'rub') return `<p class="rub${ACT.test(t) ? ' act' : ''}">${inl(t)}</p>`;
   if (b.k === 'opt') {
     // Bible reference like 格前12:12-14（title）: the title in smaller type
-    const r = t.match(/^(.{0,3}[^\s（(：:]{1,5}\d+:[\d,\- :]*\d)(（[^（）]*）?)?(.*)$/s);
+    const r = t.match(/^(.{0,3}[^\s（(：:]{1,5}\d+:[\dabc,\-– :]*[\dabc])(（[^（）]*）?)?(.*)$/s);
     if (r && r[2]) return `<p class="m-p ropt">${esc(r[1])}<span class="ref-t">${esc(r[2])}</span>${esc(r[3])}</p>`;
     return `<p class="m-p ropt">${esc(t)}</p>`;
   }
