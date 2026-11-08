@@ -1,0 +1,29 @@
+{
+  "name": "獻禮 OBLATIO — 彌撒・聖事禮典・祝福禮典",
+  "short_name": "獻禮",
+  "description": "獻禮 OBLATIO：中文彌撒經文編排（主禮用）、聖事禮典、祝福禮典；可選通用、香港、澳門及台灣禮儀日曆。",
+  "lang": "zh-Hant-HK",
+  "start_url": "./#/",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1f3a68",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
