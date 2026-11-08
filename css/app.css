@@ -197,3 +197,56 @@ h1.mtitle .b-num { margin-right: .4em; }
 .b-prevnext a { text-decoration: none; color: var(--accent); max-width: 48%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .b-src { margin-top: 1.6em; }
 @media print { .b-steps, .b-prevnext, .b-crumb, .b-intro:not([open]) { display: none !important; } }
+/* ---------- 祝福禮典 v8: one rite per screen, outline, sticky steps, options, presider mode ---------- */
+.b-cnt { font-size: 12px; color: var(--muted); border: 1px solid var(--line); border-radius: 10px; padding: 0 7px; white-space: nowrap; }
+.b-last { display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin: 0 0 .4em; border-radius: 12px; background: var(--chip); color: var(--ink); text-decoration: none; font-size: 16px; }
+.b-last small { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.b-last span:nth-child(2) { flex: 1; }
+.b-hint { font-size: 14px; color: var(--muted); margin: 0 0 .3em; }
+.b-tree { list-style: none; padding: 0; margin: 0 0 1em; font-size: 16px; }
+.b-tree li { border-bottom: 1px solid var(--line); }
+.b-tree li.grp { color: var(--red); font-weight: 700; font-size: 14px; letter-spacing: .05em; padding: 14px 0 4px; border-bottom: 0; }
+.b-tree li a { display: flex; align-items: center; gap: 8px; padding: 10px 4px; color: var(--ink); text-decoration: none; line-height: 1.45; }
+.b-tree li a span:first-child { flex: 1; }
+.b-tree li a:active { background: var(--chip); }
+.b-tree .d1 { padding-left: 1.2em; } .b-tree .d2 { padding-left: 2.4em; } .b-tree .d3 { padding-left: 3.4em; }
+.b-tree li.cur a { color: var(--accent); font-weight: 700; }
+.b-tree li.cur a::before { content: '▸'; margin-right: -4px; }
+.b-crumb a + a, .b-crumb a:last-child { color: var(--muted); }
+.b-crumb a:first-child { color: var(--accent); }
+.b-sticky { position: sticky; top: var(--toph, 86px); z-index: 4; background: var(--bg); border-bottom: 1px solid var(--line); margin: 0 0 .4em; }
+.b-where { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); padding: 4px 0 0; min-height: 30px; }
+.b-here { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: 0; transition: opacity .2s; }
+.b-sticky.stuck .b-here { opacity: 1; }
+.b-here b { color: var(--red); font-weight: 700; }
+.b-toc { width: 32px; height: 30px; border-radius: 8px; color: var(--accent); font-size: 18px; }
+.b-toc:active, .b-pres:active { background: var(--chip); }
+.b-pres { font-size: 13px; padding: 3px 11px; border-radius: 14px; border: 1px solid var(--accent); color: var(--accent); white-space: nowrap; }
+.b-pres[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.b-sticky .b-steps { position: static; border-bottom: 0; margin: 0; padding: 4px 0 7px; }
+.b-steps button[aria-current="step"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.b-rite [data-step] { scroll-margin-top: calc(var(--toph, 86px) + 90px); }
+.b-opts .row { flex-wrap: wrap; align-items: baseline; }
+.b-opts .row > span:first-child { color: var(--red); font-size: 13px; }
+.b-opts .pill { font-size: 14px; text-decoration: none; color: var(--ink); }
+.b-opts .pill[aria-pressed="true"] { color: #fff; }
+.b-alt { display: flex; flex-wrap: wrap; gap: 5px; margin: .7em 0 .2em; font-size: 13px; line-height: 1.4; }
+.b-alt::before { content: '可選：'; color: var(--muted); align-self: center; }
+.b-alt button { border: 1px dashed var(--line); border-radius: 12px; padding: 2px 10px; color: var(--accent); background: var(--bg); max-width: 100%; text-align: left; }
+.b-alt button[aria-checked="true"] { border-style: solid; border-color: var(--accent); background: var(--chip); font-weight: 700; }
+.b-altlab { font-size: .72em; color: var(--muted); margin: .9em 0 0; letter-spacing: .05em; }
+.b-prevnext span { flex: 1; }
+.b-prevnext a:last-child { text-align: right; }
+/* 主禮模式 */
+body.presider .top, body.presider .tts, body.presider #celebs, body.presider .b-crumb, body.presider .b-opts, body.presider .b-prevnext,
+body.presider .b-intro, body.presider .b-rite .rub:not(.act), body.presider .update { display: none !important; }
+body.presider { --toph: 0px; }
+body.presider .b-sticky { top: 0; padding-top: env(safe-area-inset-top); }
+body.presider .b-here { opacity: 1; }
+body.presider .office { padding-bottom: 40vh; }
+body.presider .b-rite { font-size: 1.22em; line-height: 1.7; }
+body.presider .b-rite .m-p { margin: .45em 0; }
+body.presider .b-rite .rub.act { font-size: .7em; }
+body.presider .b-alt { font-size: 12px; opacity: .8; }
+body.presider h1.mtitle { margin-top: .6em; }
+@media print { .b-sticky, .b-alt, .b-opts, .b-drawer, .b-last { display: none !important; } }

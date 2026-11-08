@@ -1,11 +1,11 @@
 // 獻禮 OBLATIO — 彌撒・聖事禮典・祝福禮典 (companion to 常頌 SEMPER, which keeps the Liturgy of the Hours)
 import { loadCalendar, dayInfo, setCalendar, calendarList, currentCalendar } from './liturgy.js';
 import { fromIso, iso, WD } from './calendar.js';
-import { loadBlessings, renderIndex as blessIndex, renderChapter as blessChapter, goStep } from './blessings.js';
+import { loadBlessings, renderIndex as blessIndex, renderChapter as blessChapter, renderRite as blessRite, chapterTarget as blessTarget, bindBlessings, setStore as blessStore } from './blessings.js';
 import { initTTS, stop as stopTTS } from './tts.js';
 import { loadMissal, missalLoaded, massesFor, defaults as massDefaults, renderMass as massHtml, optionsPanel } from './missal.js';
 
-const APP_VERSION = 'v7';   // keep in step with VERSION in sw.js
+const APP_VERSION = 'v8';   // keep in step with VERSION in sw.js
 const $ = (s) => document.querySelector(s);
 const store = { get(k, d) { try { const v = localStorage.getItem('oblatio.' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem('oblatio.' + k, JSON.stringify(v)); } catch {} } };
@@ -13,6 +13,7 @@ const store = { get(k, d) { try { const v = localStorage.getItem('oblatio.' + k)
 const hkToday = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Hong_Kong' }).format(new Date());
 const BOOKS = [{ id: 'm', name: '彌撒' }, { id: 'r', name: '聖事禮典' }, { id: 'b', name: '祝福禮典' }];
 const S = { date: hkToday(), book: store.get('book', 'm'), choice: {} };
+blessStore(store);
 
 function parseHash() {
   const m = location.hash.match(/^#\/(\d{4}-\d\d-\d\d)?\/?([mbr])?(?:\?c=([\w@-]*))?/);
@@ -79,16 +80,19 @@ function render() {
 
 async function renderBook(book, info) {
   const el = $('#office');
+  if (book !== 'b') document.body.classList.remove('presider');
   if (book === 'b') {
     if (!S.bLoaded) { el.innerHTML = '<p class="loading">載入祝福禮典…</p>'; try { await loadBlessings(); S.bLoaded = true; } catch (e) { el.innerHTML = '<p class="empty">未能載入祝福禮典。</p>'; return; } if (S.book !== 'b') return; }
-    const chap = store.get('bchap', '');
-    el.innerHTML = chap ? blessChapter(chap) : blessIndex(S.bq || '');
-    const go = (c, sec) => { store.set('bchap', c); render(); if (sec) setTimeout(() => { const t = document.getElementById(sec); if (t) t.scrollIntoView(); }, 30); else window.scrollTo(0, 0); };
-    el.querySelectorAll('[data-chap]').forEach((a) => a.onclick = (e) => { e.preventDefault(); go(a.dataset.chap, a.dataset.sec); });
-    el.querySelectorAll('[data-step-go]').forEach((x) => x.onclick = () => goStep(el, x.dataset.stepGo));
-    el.querySelectorAll('[data-jump]').forEach((x) => x.onclick = () => { const t = document.getElementById(x.dataset.jump); if (t) t.scrollIntoView({ behavior: 'smooth' }); });
-    el.querySelectorAll('[data-b="index"]').forEach((x) => x.onclick = (e) => { e.preventDefault(); store.set('bchap', ''); render(); window.scrollTo(0, 0); });
-    el.querySelectorAll('[data-b="print"]').forEach((x) => x.onclick = () => window.print());
+    // v8: index → chapter outline → one rite (bchap / brite in storage)
+    let rite = store.get('brite', ''), chap = store.get('bchap', '');
+    if (chap && !rite && blessTarget(chap)?.rite) rite = blessTarget(chap).rite;
+    el.innerHTML = rite ? blessRite(rite) : chap ? blessChapter(chap) : blessIndex(S.bq || '');
+    const open = (v) => {
+      store.set('brite', v && v.rite ? v.rite : ''); store.set('bchap', v && v.chap ? v.chap : '');
+      if (v && v.rite) store.set('brecent', v.rite);
+      render(); window.scrollTo(0, 0);
+    };
+    bindBlessings(el, { open, rerender: () => render() });
     const q = el.querySelector('[data-b="search"]');
     if (q) q.oninput = () => { S.bq = q.value; const pos = q.selectionStart; render(); const q2 = $('#office [data-b="search"]'); if (q2) { q2.focus(); q2.setSelectionRange(pos, pos); } };
     finish(el); return;
