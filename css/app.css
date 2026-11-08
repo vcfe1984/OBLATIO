@@ -130,6 +130,7 @@ body.has-tts .update { bottom: calc(70px + env(safe-area-inset-bottom)); }
 .celebs .opt .dot { color: var(--red); }
 .welcome-remember { display: flex; gap: 8px; align-items: center; justify-content: center; font-size: 14px; color: var(--ink); margin: 4px 0 2px; }
 .welcome-note { font-size: 12px; color: var(--muted); margin: 0 0 12px; }
+.welcome-copy { font-size: 11px; color: var(--muted); margin: 14px 0 0; }
 .nowelcome #welcome { display: none; }
 
 /* ---------- 禮書切換 ＋ 彌撒 ---------- */

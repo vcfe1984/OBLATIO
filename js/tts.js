@@ -2,7 +2,8 @@
 // 不經網絡、不收費；語音的質素取決於裝置（iPhone/iPad、Android、Mac、Windows 各有內建中文語音）。
 const synth = typeof window !== 'undefined' ? window.speechSynthesis : null;
 const LANGS = { yue: { label: '粵語', want: ['zh-HK', 'yue-HK', 'yue', 'zh-yue'] }, cmn: { label: '普通話', want: ['zh-TW', 'zh-CN', 'cmn-Hant-TW', 'cmn-Hans-CN', 'zh'] } };
-const RATES = [[0.75, '慢'], [0.9, '中'], [1.1, '快']];
+const SPEEDS = [['slow', 0.6, '慢'], ['mid', 0.9, '中']];   // no fast speed (Fr. Gervais, 9 Nov 2026)
+const speed = () => SPEEDS.find((r) => r[0] === store.get('ttsSpeed', 'mid')) || SPEEDS[1];
 let queue = [], pos = 0, playing = false, paused = false, store, $bar, gen = 0;   // gen: ignore events of cancelled utterances
 
 const norm = (l) => (l || '').toLowerCase().replace('_', '-');
@@ -51,7 +52,7 @@ function speakNext() {
   const v = voiceFor(lang);
   if (v) u.voice = v;
   u.lang = v ? v.lang : LANGS[lang].want[0];
-  u.rate = store.get('ttsRate', 0.9);
+  u.rate = speed()[1];
   const my = ++gen;
   u.onend = () => { if (my === gen && playing && !paused) { pos++; speakNext(); } };
   u.onerror = () => { if (my === gen && playing && !paused) { pos++; speakNext(); } };
@@ -86,11 +87,11 @@ function msg(lang) {
 
 function paint() {
   if (!$bar) return;
-  const lang = store.get('ttsLang', 'yue'), rate = store.get('ttsRate', 0.9);
+  const lang = store.get('ttsLang', 'yue');
   $bar.querySelector('[data-tts="play"]').textContent = playing && !paused ? '❚❚' : '▶ 朗讀';
   $bar.querySelector('[data-tts="stop"]').hidden = !playing;
   $bar.querySelectorAll('[data-lang]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.lang === lang));
-  $bar.querySelector('[data-tts="rate"]').textContent = (RATES.find((r) => r[0] === rate) || RATES[1])[1] + '速';
+  $bar.querySelector('[data-tts="rate"]').textContent = speed()[2] + '速';
 }
 
 export function initTTS(st) {
@@ -112,8 +113,7 @@ export function initTTS(st) {
     if (playing) { gen++; synth.cancel(); paused = false; speakNext(); }
   });
   $bar.querySelector('[data-tts="rate"]').onclick = () => {
-    const i = RATES.findIndex((r) => r[0] === store.get('ttsRate', 0.9));
-    store.set('ttsRate', RATES[(i + 1) % RATES.length][0]); paint();
+    store.set('ttsSpeed', speed()[0] === 'mid' ? 'slow' : 'mid'); paint();
     if (playing && !paused) { gen++; synth.cancel(); speakNext(); }
   };
   document.body.classList.add('has-tts');
